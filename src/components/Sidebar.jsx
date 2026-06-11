@@ -11,6 +11,8 @@ import {
   BarChart3,
   Settings,
   Plus,
+  PlayCircle,
+  Apple,
 } from 'lucide-react'
 import './Sidebar.css'
 
@@ -74,14 +76,14 @@ export default function Sidebar() {
         </p>
         <div className="sidebar-store-buttons">
           <div className="sidebar-store-btn">
-            <span className="sidebar-store-icon">▶</span>
+            <PlayCircle size={20} strokeWidth={1.8} className="sidebar-store-icon" />
             <div>
               <div className="sidebar-store-caption">GET IT ON</div>
               <div className="sidebar-store-name">Google Play</div>
             </div>
           </div>
           <div className="sidebar-store-btn">
-            <span className="sidebar-store-icon"></span>
+            <Apple size={20} strokeWidth={1.8} className="sidebar-store-icon" />
             <div>
               <div className="sidebar-store-caption">Download on the</div>
               <div className="sidebar-store-name">App Store</div>

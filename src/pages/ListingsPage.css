@@ -13,6 +13,26 @@
   color: var(--color-text);
 }
 
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+  color: var(--color-text);
+}
+
+.page-title-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .listings-subtitle {
   font-size: 13.5px;
   color: var(--color-text-faint);

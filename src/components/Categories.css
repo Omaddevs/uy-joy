@@ -25,10 +25,14 @@
   box-shadow: var(--shadow-card);
 }
 
-.category-emoji {
-  font-size: 46px;
-  line-height: 1;
-  margin-bottom: 12px;
+.category-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
 }
 
 .category-title {
@@ -70,8 +74,10 @@
     padding: 14px 8px;
   }
 
-  .category-emoji {
-    font-size: 30px;
+  .category-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
     margin-bottom: 8px;
   }
 

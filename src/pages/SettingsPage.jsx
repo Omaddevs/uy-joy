@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, Globe, Lock, User, Check } from 'lucide-react'
+import { Bell, Globe, Lock, User, Check, Settings } from 'lucide-react'
 import './ListingsPage.css'
 import './SettingsPage.css'
 
@@ -39,7 +39,12 @@ export default function SettingsPage() {
     <main className="main-content">
       <section className="listings-head">
         <div>
-          <h1 className="listings-title">⚙️ Sozlamalar</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: '#F1F3F7', color: 'var(--color-text-muted)' }}>
+              <Settings size={20} strokeWidth={2} />
+            </span>
+            Sozlamalar
+          </h1>
           <p className="listings-subtitle">Profil va ilova sozlamalarini boshqaring</p>
         </div>
       </section>

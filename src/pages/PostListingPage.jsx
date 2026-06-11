@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Check, Image as ImageIcon, Wifi } from 'lucide-react'
+import { Check, Image as ImageIcon, Wifi, FilePlus, FilePen } from 'lucide-react'
 import { CATEGORIES } from '../data/categories.js'
 import { LISTINGS_BY_ID } from '../data/listings.js'
 import './ListingsPage.css'
@@ -92,7 +92,12 @@ export default function PostListingPage() {
     <main className="main-content">
       <section className="listings-head">
         <div>
-          <h1 className="listings-title">{editingListing ? "✏️ E'lonni tahrirlash" : "📝 E'lon berish"}</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: 'var(--color-primary-soft-2)', color: 'var(--color-primary)' }}>
+              {editingListing ? <FilePen size={20} strokeWidth={2} /> : <FilePlus size={20} strokeWidth={2} />}
+            </span>
+            {editingListing ? "E'lonni tahrirlash" : "E'lon berish"}
+          </h1>
           <p className="listings-subtitle">
             {editingListing ? "E'lon ma'lumotlarini yangilang" : "Mulkingiz haqida to'liq ma'lumot kiriting"}
           </p>
@@ -117,7 +122,7 @@ export default function PostListingPage() {
             <select value={form.category} onChange={(e) => update('category', e.target.value)}>
               {CATEGORIES.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.emoji} {c.label}
+                  {c.label}
                 </option>
               ))}
             </select>

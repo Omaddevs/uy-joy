@@ -36,7 +36,7 @@ export const CONVERSATIONS = [
     messages: [
       { id: 1, from: 'me', text: "Salom, dacha haqida qo'shimcha rasm yubora olasizmi?", time: '2 kun oldin' },
       { id: 2, from: 'them', text: "Albatta, hoziroq yuboraman", time: '2 kun oldin' },
-      { id: 3, from: 'them', text: "Rahmat, kutib turaman 🙂", time: '1 kun oldin' },
+      { id: 3, from: 'them', text: "Rahmat, kutib turaman", time: '1 kun oldin' },
     ],
   },
 ]

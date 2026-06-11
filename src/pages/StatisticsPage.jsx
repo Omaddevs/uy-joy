@@ -1,4 +1,4 @@
-import { Eye, Heart, MessageSquare, FileText, ArrowUp, ArrowDown } from 'lucide-react'
+import { Eye, Heart, MessageSquare, FileText, ArrowUp, ArrowDown, BarChart3 } from 'lucide-react'
 import MarketStats from '../components/MarketStats.jsx'
 import './ListingsPage.css'
 import './StatisticsPage.css'
@@ -26,7 +26,12 @@ export default function StatisticsPage() {
     <main className="main-content">
       <section className="listings-head">
         <div>
-          <h1 className="listings-title">📊 Statistika</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: 'var(--color-primary-soft-2)', color: 'var(--color-primary)' }}>
+              <BarChart3 size={20} strokeWidth={2} />
+            </span>
+            Statistika
+          </h1>
           <p className="listings-subtitle">Eʻlonlaringiz boʻyicha umumiy koʻrsatkichlar</p>
         </div>
       </section>

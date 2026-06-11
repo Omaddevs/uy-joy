@@ -49,8 +49,11 @@ export default function ListingsPage({ category }) {
 
       <section className="listings-head">
         <div className="desktop-only" style={{ display: 'block' }}>
-          <h1 className="listings-title">
-            {info.emoji} {info.label}
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: info.bg, color: info.color }}>
+              <info.icon size={22} strokeWidth={2} />
+            </span>
+            {info.label}
           </h1>
           <p className="listings-subtitle">{allListings.length} ta e'lon topildi</p>
         </div>

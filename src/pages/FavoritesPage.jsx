@@ -13,7 +13,12 @@ export default function FavoritesPage() {
     <main className="main-content">
       <section className="listings-head">
         <div>
-          <h1 className="listings-title">❤️ Sevimlilar</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: 'var(--color-danger-soft)', color: 'var(--color-danger)' }}>
+              <Heart size={20} strokeWidth={2} />
+            </span>
+            Sevimlilar
+          </h1>
           <p className="listings-subtitle">{items.length} ta saqlangan e'lon</p>
         </div>
       </section>

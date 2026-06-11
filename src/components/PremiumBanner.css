@@ -42,20 +42,19 @@
   box-shadow: 0 6px 14px rgba(0, 0, 0, .12);
 }
 
-.premium-banner-emoji-house {
+.premium-banner-icon-house {
   position: absolute;
   right: -6px;
-  bottom: -8px;
-  font-size: 60px;
+  bottom: -10px;
   z-index: 1;
-  opacity: .95;
+  color: rgba(255, 255, 255, .18);
 }
 
-.premium-banner-emoji-rocket {
+.premium-banner-icon-rocket {
   position: absolute;
-  right: 74px;
-  top: 18px;
-  font-size: 30px;
+  right: 70px;
+  top: 20px;
   z-index: 1;
-  transform: rotate(12deg);
+  color: rgba(255, 255, 255, .55);
+  transform: rotate(35deg);
 }

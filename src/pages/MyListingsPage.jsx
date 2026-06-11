@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Eye, Pencil, Trash2, Plus, Calendar } from 'lucide-react'
+import { Eye, Pencil, Trash2, Plus, Calendar, FileText } from 'lucide-react'
 import { MY_LISTINGS, STATUS_LABELS } from '../data/myListings.js'
 import './ListingsPage.css'
 import './FavoritesPage.css'
@@ -17,7 +17,12 @@ export default function MyListingsPage() {
     <main className="main-content">
       <section className="listings-head">
         <div>
-          <h1 className="listings-title">📄 Mening e'lonlarim</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: 'var(--color-orange-soft)', color: 'var(--color-orange)' }}>
+              <FileText size={20} strokeWidth={2} />
+            </span>
+            Mening e'lonlarim
+          </h1>
           <p className="listings-subtitle">{items.length} ta e'lon joylashtirilgan</p>
         </div>
         <Link to="/elon-berish" className="my-listings-add-btn">

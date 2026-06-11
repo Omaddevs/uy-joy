@@ -1,3 +1,4 @@
+import { Home, Rocket } from 'lucide-react'
 import './PremiumBanner.css'
 
 export default function PremiumBanner() {
@@ -10,8 +11,12 @@ export default function PremiumBanner() {
         </p>
         <button className="premium-banner-btn">Premiumga o'tish</button>
       </div>
-      <div className="premium-banner-emoji-house">🏠</div>
-      <div className="premium-banner-emoji-rocket">🚀</div>
+      <div className="premium-banner-icon-house">
+        <Home size={64} strokeWidth={1.5} />
+      </div>
+      <div className="premium-banner-icon-rocket">
+        <Rocket size={30} strokeWidth={1.8} />
+      </div>
     </section>
   )
 }

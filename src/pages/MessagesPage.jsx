@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Send, Search } from 'lucide-react'
+import { Send, Search, MessageSquare } from 'lucide-react'
 import { CONVERSATIONS } from '../data/conversations.js'
 import './ListingsPage.css'
 import './MessagesPage.css'
@@ -40,7 +40,12 @@ export default function MessagesPage() {
     <main className="main-content">
       <section className="listings-head">
         <div>
-          <h1 className="listings-title">💬 Xabarlar</h1>
+          <h1 className="page-title">
+            <span className="page-title-icon" style={{ background: 'var(--color-primary-soft-2)', color: 'var(--color-primary)' }}>
+              <MessageSquare size={20} strokeWidth={2} />
+            </span>
+            Xabarlar
+          </h1>
           <p className="listings-subtitle">{conversations.length} ta suhbat</p>
         </div>
       </section>
