@@ -1,0 +1,19 @@
+.right-sidebar {
+  width: 286px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+@media (max-width: 1300px) {
+  .right-sidebar {
+    width: 260px;
+  }
+}
+
+@media (max-width: 900px) {
+  .right-sidebar {
+    display: none;
+  }
+}

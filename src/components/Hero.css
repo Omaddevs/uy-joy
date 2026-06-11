@@ -1,0 +1,249 @@
+.hero {
+  position: relative;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  background: #0F172A;
+  min-height: 312px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, .10);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(244, 245, 248, .98) 0%,
+    rgba(244, 245, 248, .95) 30%,
+    rgba(244, 245, 248, .55) 50%,
+    rgba(244, 245, 248, 0) 66%
+  );
+}
+
+.hero-text {
+  position: relative;
+  padding: 42px 44px 0;
+}
+
+.hero-title {
+  font-size: 52px;
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: var(--color-text);
+  max-width: 460px;
+}
+
+.hero-title-accent {
+  color: var(--color-primary);
+}
+
+.hero-subtitle {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  max-width: 380px;
+  font-weight: 500;
+}
+
+.hero-search-card {
+  position: relative;
+  margin: 30px 18px 18px;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, .12);
+  border: 1px solid var(--color-border-light);
+}
+
+.hero-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.hero-tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 11px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--color-text-faint);
+  transition: background .15s, color .15s;
+}
+
+.hero-tab.is-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.hero-filters {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.hero-filter {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+.hero-filter-body {
+  flex: 1;
+}
+
+.hero-filter-label {
+  font-size: 11px;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+
+.hero-filter-value {
+  font-size: 14px;
+  color: var(--color-text);
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.hero-filter-placeholder {
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+
+.hero-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 28px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary-btn);
+}
+
+@media (max-width: 1100px) {
+  .hero-title {
+    font-size: 38px;
+  }
+
+  .hero-filters {
+    flex-wrap: wrap;
+  }
+
+  .hero-filter {
+    min-width: 140px;
+  }
+}
+
+.hero-search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-border-input);
+  background: #F8F9FC;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.hero-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.hero-search-btn-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary-btn);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    border-radius: var(--radius-lg);
+    min-height: 0;
+    background: var(--color-surface);
+  }
+
+  .hero-bg,
+  .hero-overlay {
+    display: none;
+  }
+
+  .hero-text {
+    padding: 20px 16px 0;
+  }
+
+  .hero-title {
+    font-size: 26px;
+    letter-spacing: -.6px;
+    max-width: none;
+  }
+
+  .hero-subtitle {
+    font-size: 13.5px;
+    margin-top: 8px;
+    max-width: none;
+  }
+
+  .hero-search-card {
+    margin: 16px 0 0;
+    padding: 14px;
+    box-shadow: none;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .hero-tabs {
+    display: none;
+  }
+
+  .hero-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .hero-filter {
+    min-width: 0;
+  }
+}

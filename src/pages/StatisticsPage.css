@@ -1,0 +1,123 @@
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stats-summary-card {
+  padding: 18px;
+  position: relative;
+}
+
+.stats-summary-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.stats-summary-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -.4px;
+}
+
+.stats-summary-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+  margin-top: 4px;
+}
+
+.stats-summary-change {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.stats-summary-change.is-up {
+  color: var(--color-success);
+}
+
+.stats-summary-change.is-down {
+  color: var(--color-danger);
+}
+
+.stats-chart-card {
+  padding: 22px;
+}
+
+.stats-chart-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 24px;
+}
+
+.stats-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  height: 200px;
+}
+
+.stats-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  gap: 10px;
+}
+
+.stats-bar {
+  width: 100%;
+  max-width: 48px;
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(180deg, var(--color-primary-light), var(--color-primary));
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  min-height: 24px;
+}
+
+.stats-bar-value {
+  position: absolute;
+  top: -22px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.stats-bar-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+}
+
+.stats-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 420px;
+}
+
+@media (max-width: 1100px) {
+  .stats-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-bottom {
+    max-width: none;
+  }
+}

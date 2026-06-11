@@ -1,0 +1,143 @@
+.my-listings-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 11px 20px;
+  box-shadow: var(--shadow-primary-btn);
+  white-space: nowrap;
+}
+
+.my-listings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.my-listing-row {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.my-listing-media {
+  width: 110px;
+  height: 84px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.my-listing-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.my-listing-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.my-listing-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.my-listing-price {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-success);
+  margin-top: 6px;
+}
+
+.my-listing-price span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+}
+
+.my-listing-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.my-listing-status {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.my-listing-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+}
+
+.my-listing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.my-listing-action {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--color-border-input);
+  background: #fff;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.my-listing-action:hover {
+  background: #F8F9FC;
+}
+
+.my-listing-action-danger {
+  color: var(--color-danger);
+}
+
+.my-listing-action-danger:hover {
+  background: var(--color-danger-soft);
+}
+
+@media (max-width: 900px) {
+  .my-listing-row {
+    flex-wrap: wrap;
+  }
+
+  .my-listing-actions {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .my-listing-action {
+    flex: 1;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,177 @@
+.property-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow .15s, transform .15s;
+}
+
+.property-card:hover {
+  box-shadow: 0 10px 24px rgba(15, 23, 42, .08);
+  transform: translateY(-2px);
+}
+
+.property-card-media {
+  position: relative;
+  height: 150px;
+}
+
+.property-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-card-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 8px;
+}
+
+.property-card-fav {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .92);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+}
+
+.property-card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.property-card-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.35;
+  min-height: 40px;
+}
+
+.property-card-price {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--color-success);
+  margin: 6px 0 12px;
+}
+
+.property-card-unit {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+}
+
+.property-card-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #F1F3F7;
+}
+
+.property-card-feature {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.property-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 11px;
+}
+
+.property-card-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+
+.property-card-time {
+  font-size: 11.5px;
+  color: var(--color-text-soft);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .listings-grid .property-card {
+    flex-direction: row;
+  }
+
+  .listings-grid .property-card-media {
+    width: 124px;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .listings-grid .property-card-tag {
+    top: 8px;
+    left: 8px;
+    font-size: 10.5px;
+    padding: 3px 8px;
+  }
+
+  .listings-grid .property-card-fav {
+    width: 28px;
+    height: 28px;
+    top: 6px;
+    right: 6px;
+  }
+
+  .listings-grid .property-card-body {
+    padding: 10px 12px;
+    gap: 2px;
+  }
+
+  .listings-grid .property-card-title {
+    font-size: 13.5px;
+    min-height: 0;
+  }
+
+  .listings-grid .property-card-price {
+    font-size: 16px;
+    margin: 4px 0 8px;
+  }
+
+  .listings-grid .property-card-features {
+    gap: 8px;
+    padding-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .listings-grid .property-card-feature {
+    font-size: 11.5px;
+  }
+
+  .listings-grid .property-card-meta {
+    margin-top: 8px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
