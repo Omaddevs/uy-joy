@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Home, Key, Trees, MapPin, LayoutGrid, ChevronDown, Search } from 'lucide-react'
+import { Home, Key, Trees, Search } from 'lucide-react'
+import FilterBar, { EMPTY_FILTERS } from './FilterBar.jsx'
 import './Hero.css'
 
 const TABS = [
@@ -10,17 +11,32 @@ const TABS = [
 ]
 
 export default function Hero() {
-  const [tab, setTab] = useState('sotuv')
+  const [filters, setFilters] = useState(EMPTY_FILTERS)
+  const [query, setQuery] = useState('')
   const navigate = useNavigate()
+
+  const handleSearch = () => {
+    const category = filters.categoryId || 'sotuv'
+    const params = new URLSearchParams()
+    if (filters.regionId) params.set('viloyat', filters.regionId)
+    if (filters.districtId) params.set('tuman', filters.districtId)
+    if (filters.minPrice) params.set('min', filters.minPrice)
+    if (filters.maxPrice) params.set('max', filters.maxPrice)
+    if (query.trim()) params.set('q', query.trim())
+    const qs = params.toString()
+    navigate(`/${category}${qs ? `?${qs}` : ''}`)
+  }
 
   return (
     <section className="hero">
-      <img
-        className="hero-bg"
-        src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=80&auto=format&fit=crop"
-        alt=""
-      />
-      <div className="hero-overlay" />
+      <div className="hero-media">
+        <img
+          className="hero-bg"
+          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=80&auto=format&fit=crop"
+          alt=""
+        />
+        <div className="hero-overlay" />
+      </div>
 
       <div className="hero-text">
         <h1 className="hero-title">
@@ -36,8 +52,8 @@ export default function Hero() {
           {TABS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              className={`hero-tab${tab === id ? ' is-active' : ''}`}
-              onClick={() => setTab(id)}
+              className={`hero-tab${(filters.categoryId || 'sotuv') === id ? ' is-active' : ''}`}
+              onClick={() => setFilters((f) => ({ ...f, categoryId: id }))}
             >
               <Icon size={17} strokeWidth={1.9} />
               {label}
@@ -50,54 +66,12 @@ export default function Hero() {
           <input
             className="hero-search-input"
             placeholder="Qidirish (masalan: Chilonzor, 3 xonali)"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
           />
         </div>
 
-        <div className="hero-filters">
-          <div className="hero-filter">
-            <MapPin size={18} strokeWidth={1.9} color="#94A3B8" />
-            <div className="hero-filter-body">
-              <div className="hero-filter-label">Lokatsiya</div>
-              <div className="hero-filter-value">Toshkent</div>
-            </div>
-            <ChevronDown size={15} strokeWidth={2.2} color="#CBD5E1" />
-          </div>
-
-          <div className="hero-filter">
-            <LayoutGrid size={18} strokeWidth={1.9} color="#94A3B8" />
-            <div className="hero-filter-body">
-              <div className="hero-filter-label">Narsa turi</div>
-              <div className="hero-filter-value">Barchasi</div>
-            </div>
-            <ChevronDown size={15} strokeWidth={2.2} color="#CBD5E1" />
-          </div>
-
-          <div className="hero-filter">
-            <div className="hero-filter-body">
-              <div className="hero-filter-label">Narxi: Min</div>
-              <div className="hero-filter-value hero-filter-placeholder">Istalgan</div>
-            </div>
-            <ChevronDown size={15} strokeWidth={2.2} color="#CBD5E1" />
-          </div>
-
-          <div className="hero-filter">
-            <div className="hero-filter-body">
-              <div className="hero-filter-label">Narxi: Max</div>
-              <div className="hero-filter-value hero-filter-placeholder">Istalgan</div>
-            </div>
-            <ChevronDown size={15} strokeWidth={2.2} color="#CBD5E1" />
-          </div>
-
-          <button className="hero-search-btn desktop-only" onClick={() => navigate(`/${tab}`)}>
-            <Search size={19} strokeWidth={2.2} />
-            Qidirish
-          </button>
-        </div>
-
-        <button className="hero-search-btn-mobile mobile-only" onClick={() => navigate(`/${tab}`)}>
-          <Search size={19} strokeWidth={2.2} />
-          Qidirish
-        </button>
+        <FilterBar filters={filters} onChange={setFilters} onSearch={handleSearch} />
       </div>
     </section>
   )

@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Check, Image as ImageIcon, Wifi, FilePlus, FilePen } from 'lucide-react'
-import { CATEGORIES } from '../data/categories.js'
+import { Check, Image as ImageIcon, FilePlus, FilePen, ArrowLeft, RefreshCw } from 'lucide-react'
 import { LISTINGS_BY_ID } from '../data/listings.js'
+import { PROPERTY_TYPES, PROPERTY_TYPE_BY_ID, buildInitialDetails } from '../data/listingForms.js'
+import { addPostedListing, getPostedListings, updatePostedListing } from '../data/postedListings.js'
+import { useAuth } from '../context/AuthContext.jsx'
 import './ListingsPage.css'
 import './PostListingPage.css'
 
@@ -12,62 +14,133 @@ const UNITS = [
   { id: ' / kun', label: 'Kunlik ijara' },
 ]
 
-const FEATURE_FIELDS = [
-  { key: 'rooms', label: 'Xonalar soni', placeholder: 'Mas: 3 xona' },
-  { key: 'area', label: 'Maydon', placeholder: 'Mas: 85 m²' },
-  { key: 'land', label: 'Yer maydoni', placeholder: 'Mas: 2 sotix' },
-  { key: 'floor', label: 'Qavat', placeholder: 'Mas: 4/9 qavat' },
-]
+const GUESS_PROPERTY_TYPE = { sotuv: 'hovli', ijara: 'hovli', yer: 'yer', dacha: 'dacha', mexmonxona: 'mexmonxona' }
 
-function buildInitialState(editingListing) {
-  if (!editingListing) {
-    return {
-      category: 'sotuv',
-      title: '',
-      price: '',
-      unit: '',
-      location: '',
-      description: '',
-      image: '',
-      features: { rooms: '', area: '', land: '', floor: '' },
-      wifi: false,
-    }
-  }
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&q=80&auto=format&fit=crop'
 
-  const featureMap = Object.fromEntries(editingListing.features || [])
+function buildFreshState(propertyType, user) {
+  const config = PROPERTY_TYPE_BY_ID[propertyType]
   return {
-    category: editingListing.category,
-    title: editingListing.title,
-    price: editingListing.price.replace(/[^\d.]/g, ''),
-    unit: editingListing.unit || '',
-    location: editingListing.location,
-    description: editingListing.description,
-    image: editingListing.img || '',
-    features: {
-      rooms: featureMap.rooms || '',
-      area: featureMap.area || '',
-      land: featureMap.land || '',
-      floor: featureMap.floor || '',
-    },
-    wifi: Boolean(featureMap.wifi),
+    propertyType,
+    title: '',
+    price: '',
+    unit: '',
+    location: user?.location || '',
+    phone: user?.phone || '',
+    image: '',
+    description: '',
+    descriptionTouched: false,
+    details: buildInitialDetails(propertyType),
+    category: config.category,
   }
 }
 
 export default function PostListingPage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const editId = searchParams.get('edit')
-  const editingListing = editId ? LISTINGS_BY_ID[editId] : null
 
-  const [form, setForm] = useState(() => buildInitialState(editingListing))
+  const editingPosted = editId ? getPostedListings().find((p) => p.id === editId) : null
+  const editingMock = !editingPosted && editId ? LISTINGS_BY_ID[editId] : null
+
+  const initialForm = editingPosted
+    ? editingPosted.form
+    : editingMock
+      ? (() => {
+          const propertyType = GUESS_PROPERTY_TYPE[editingMock.category] || 'hovli'
+          const config = PROPERTY_TYPE_BY_ID[propertyType]
+          return {
+            propertyType,
+            title: editingMock.title,
+            price: (editingMock.price || '').replace(/[^\d.]/g, ''),
+            unit: editingMock.unit || '',
+            location: editingMock.location,
+            phone: user?.phone || '',
+            image: editingMock.img || '',
+            description: editingMock.description || '',
+            descriptionTouched: true,
+            details: buildInitialDetails(propertyType),
+            category: config.category,
+          }
+        })()
+      : null
+
+  const [form, setForm] = useState(initialForm)
   const [submitted, setSubmitted] = useState(false)
+  const isEditing = Boolean(editingPosted || editingMock)
 
-  const update = (key, value) => setForm((f) => ({ ...f, [key]: value }))
-  const updateFeature = (key, value) =>
-    setForm((f) => ({ ...f, features: { ...f.features, [key]: value } }))
+  const config = form ? PROPERTY_TYPE_BY_ID[form.propertyType] : null
+
+  const regenerateDescription = (next) => {
+    if (next.descriptionTouched) return next
+    const cfg = PROPERTY_TYPE_BY_ID[next.propertyType]
+    return { ...next, description: cfg.buildDescription(next) }
+  }
+
+  const selectPropertyType = (id) => {
+    setForm(buildFreshState(id, user))
+  }
+
+  const update = (key, value) => {
+    setForm((f) => regenerateDescription({ ...f, [key]: value }))
+  }
+
+  const updateDetail = (key, value) => {
+    setForm((f) => regenerateDescription({ ...f, details: { ...f.details, [key]: value } }))
+  }
+
+  const handleDescriptionChange = (value) => {
+    setForm((f) => ({ ...f, description: value, descriptionTouched: true }))
+  }
+
+  const handleRegenerateClick = () => {
+    setForm((f) => {
+      const cfg = PROPERTY_TYPE_BY_ID[f.propertyType]
+      return { ...f, description: cfg.buildDescription(f), descriptionTouched: false }
+    })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    const id = editingPosted ? editingPosted.id : `posted-${Date.now()}`
+    const entry = {
+      id,
+      status: editingPosted ? editingPosted.status : 'pending',
+      date: editingPosted ? editingPosted.date : new Date().toISOString().slice(0, 10),
+      views: editingPosted ? editingPosted.views : 0,
+      form,
+      listing: {
+        id,
+        category: form.category,
+        propertyType: form.propertyType,
+        tag: 'Tekshirilmoqda',
+        tagColor: '#F59E0B',
+        img: form.image || PLACEHOLDER_IMAGE,
+        title: form.title,
+        price: `$${form.price}`,
+        unit: form.unit,
+        location: form.location,
+        time: 'hozir',
+        description: form.description,
+        details: form.details,
+        seller: {
+          name: user?.name || '',
+          avatar: user?.avatar || '',
+          phone: form.phone,
+          rating: 5,
+        },
+        features: [],
+      },
+    }
+
+    if (editingPosted) {
+      updatePostedListing(id, entry)
+    } else {
+      addPostedListing(entry)
+    }
+
     setSubmitted(true)
     setTimeout(() => navigate('/elonlarim'), 1200)
   }
@@ -80,9 +153,42 @@ export default function PostListingPage() {
             <Check size={32} strokeWidth={2.6} />
           </div>
           <h2 className="post-success-title">
-            {editingListing ? "E'lon yangilandi!" : "E'lon joylandi!"}
+            {isEditing ? "E'lon yangilandi!" : "E'lon joylandi!"}
           </h2>
-          <p className="post-success-text">Sizni "Mening e'lonlarim" sahifasiga yo'naltiramiz...</p>
+          <p className="post-success-text">
+            {isEditing
+              ? "Sizni \"Mening e'lonlarim\" sahifasiga yo'naltiramiz..."
+              : "E'loningiz admin tomonidan tekshirilgach, sayt bo'ylab ko'rinadi. Holatini \"Mening e'lonlarim\" boʻlimida kuzating."}
+          </p>
+        </div>
+      </main>
+    )
+  }
+
+  if (!form) {
+    return (
+      <main className="main-content">
+        <section className="listings-head">
+          <div>
+            <h1 className="page-title">
+              <span className="page-title-icon" style={{ background: 'var(--color-primary-soft-2)', color: 'var(--color-primary)' }}>
+                <FilePlus size={20} strokeWidth={2} />
+              </span>
+              E'lon berish
+            </h1>
+            <p className="listings-subtitle">Mulk turini tanlang</p>
+          </div>
+        </section>
+
+        <div className="post-type-grid">
+          {PROPERTY_TYPES.map(({ id, label, icon: Icon, color, bg }) => (
+            <button key={id} type="button" className="post-type-card" onClick={() => selectPropertyType(id)}>
+              <span className="post-type-icon" style={{ background: bg, color }}>
+                <Icon size={26} strokeWidth={1.9} />
+              </span>
+              <span className="post-type-label">{label}</span>
+            </button>
+          ))}
         </div>
       </main>
     )
@@ -94,14 +200,18 @@ export default function PostListingPage() {
         <div>
           <h1 className="page-title">
             <span className="page-title-icon" style={{ background: 'var(--color-primary-soft-2)', color: 'var(--color-primary)' }}>
-              {editingListing ? <FilePen size={20} strokeWidth={2} /> : <FilePlus size={20} strokeWidth={2} />}
+              {isEditing ? <FilePen size={20} strokeWidth={2} /> : <FilePlus size={20} strokeWidth={2} />}
             </span>
-            {editingListing ? "E'lonni tahrirlash" : "E'lon berish"}
+            {isEditing ? "E'lonni tahrirlash" : `E'lon berish — ${config.label}`}
           </h1>
-          <p className="listings-subtitle">
-            {editingListing ? "E'lon ma'lumotlarini yangilang" : "Mulkingiz haqida to'liq ma'lumot kiriting"}
-          </p>
+          <p className="listings-subtitle">Mulkingiz haqida to'liq ma'lumot kiriting</p>
         </div>
+        {!isEditing && (
+          <button type="button" className="post-back-btn" onClick={() => setForm(null)}>
+            <ArrowLeft size={16} strokeWidth={2.2} />
+            Mulk turini almashtirish
+          </button>
+        )}
       </section>
 
       <form className="card-surface post-form" onSubmit={handleSubmit}>
@@ -111,33 +221,24 @@ export default function PostListingPage() {
             <span>Sarlavha</span>
             <input
               required
-              placeholder="Mas: Chilonzor tumani, 4 xonali hovli"
+              placeholder={`Mas: ${config.label} - ${form.location || 'Toshkent'}`}
               value={form.title}
               onChange={(e) => update('title', e.target.value)}
             />
           </label>
 
-          <label className="post-field">
-            <span>Kategoriya</span>
-            <select value={form.category} onChange={(e) => update('category', e.target.value)}>
-              {CATEGORIES.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="post-field">
-            <span>E'lon turi</span>
-            <select value={form.unit} onChange={(e) => update('unit', e.target.value)}>
-              {UNITS.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          {form.propertyType !== 'yer' && (
+            <label className="post-field">
+              <span>E'lon turi</span>
+              <select value={form.unit} onChange={(e) => update('unit', e.target.value)}>
+                {UNITS.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <label className="post-field">
             <span>Narx ($)</span>
@@ -145,7 +246,7 @@ export default function PostListingPage() {
               required
               type="number"
               min="0"
-              placeholder="Mas: 150000"
+              placeholder="Mas: 45000"
               value={form.price}
               onChange={(e) => update('price', e.target.value)}
             />
@@ -160,41 +261,102 @@ export default function PostListingPage() {
               onChange={(e) => update('location', e.target.value)}
             />
           </label>
+
+          <label className="post-field">
+            <span>Telefon</span>
+            <input
+              required
+              placeholder="+998 90 123 45 67"
+              value={form.phone}
+              onChange={(e) => update('phone', e.target.value)}
+            />
+          </label>
         </div>
 
-        <h2 className="post-section-title">Xususiyatlar</h2>
+        <h2 className="post-section-title">Mulk xususiyatlari</h2>
         <div className="post-grid">
-          {FEATURE_FIELDS.map(({ key, label, placeholder }) => (
-            <label key={key} className="post-field">
-              <span>{label}</span>
-              <input
-                placeholder={placeholder}
-                value={form.features[key]}
-                onChange={(e) => updateFeature(key, e.target.value)}
-              />
-            </label>
-          ))}
-          <label className="post-field post-checkbox-field">
-            <input
-              type="checkbox"
-              checked={form.wifi}
-              onChange={(e) => update('wifi', e.target.checked)}
-            />
-            <Wifi size={16} strokeWidth={2} />
-            <span>Wi-Fi mavjud</span>
-          </label>
+          {config.fields.map((field) => {
+            if (field.showIf && !field.showIf(form.details)) return null
+            const value = form.details[field.key]
+
+            if (field.type === 'toggle') {
+              return (
+                <div key={field.key} className="post-field">
+                  <span>{field.label}</span>
+                  <div className="post-toggle">
+                    {['Bor', "Yo'q"].map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        className={`post-toggle-btn${value === opt ? ' is-active' : ''}`}
+                        onClick={() => updateDetail(field.key, opt)}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+
+            if (field.type === 'select') {
+              return (
+                <label key={field.key} className="post-field">
+                  <span>{field.label}</span>
+                  <select value={value} onChange={(e) => updateDetail(field.key, e.target.value)}>
+                    <option value="">Tanlang</option>
+                    {field.options.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )
+            }
+
+            if (field.type === 'textarea') {
+              return (
+                <label key={field.key} className="post-field post-field-full">
+                  <span>{field.label}</span>
+                  <textarea
+                    rows={3}
+                    placeholder={field.placeholder}
+                    value={value}
+                    onChange={(e) => updateDetail(field.key, e.target.value)}
+                  />
+                </label>
+              )
+            }
+
+            return (
+              <label key={field.key} className="post-field">
+                <span>{field.label}{field.suffix ? ` (${field.suffix.trim()})` : ''}</span>
+                <input
+                  placeholder={field.placeholder}
+                  value={value}
+                  onChange={(e) => updateDetail(field.key, e.target.value)}
+                />
+              </label>
+            )
+          })}
         </div>
 
         <h2 className="post-section-title">Tavsif va rasm</h2>
         <div className="post-grid">
           <label className="post-field post-field-full">
-            <span>Tavsif</span>
+            <div className="post-field-label-row">
+              <span>Tavsif (avtomatik to'ldiriladi, tahrirlash mumkin)</span>
+              <button type="button" className="post-regenerate-btn" onClick={handleRegenerateClick}>
+                <RefreshCw size={13} strokeWidth={2.2} />
+                Avtomatik to'ldirish
+              </button>
+            </div>
             <textarea
               required
-              rows={5}
-              placeholder="Mulk haqida batafsil ma'lumot yozing..."
+              rows={10}
               value={form.description}
-              onChange={(e) => update('description', e.target.value)}
+              onChange={(e) => handleDescriptionChange(e.target.value)}
             />
           </label>
 
@@ -222,7 +384,7 @@ export default function PostListingPage() {
             Bekor qilish
           </button>
           <button type="submit" className="post-submit-btn">
-            {editingListing ? "Saqlash" : "E'lonni joylash"}
+            {isEditing ? 'Saqlash' : "E'lonni joylash"}
           </button>
         </div>
       </form>

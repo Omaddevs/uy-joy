@@ -1,10 +1,15 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ArrowLeft, SlidersHorizontal, MapPin, BedDouble, Wallet } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
+import { ArrowLeft, SlidersHorizontal } from 'lucide-react'
 import PropertyCard from '../components/PropertyCard.jsx'
+import FilterBar from '../components/FilterBar.jsx'
+import Pagination from '../components/Pagination.jsx'
 import { CATEGORY_BY_ID } from '../data/categories.js'
 import { getListingsByCategory } from '../data/listings.js'
+import { REGION_BY_ID } from '../data/regions.js'
 import './ListingsPage.css'
+
+const PAGE_SIZE = 8
 
 function parsePrice(price) {
   return Number(String(price).replace(/[^0-9]/g, '')) || 0
@@ -19,20 +24,64 @@ const SORT_OPTIONS = [
 export default function ListingsPage({ category }) {
   const info = CATEGORY_BY_ID[category]
   const allListings = useMemo(() => getListingsByCategory(category), [category])
-  const [query, setQuery] = useState('')
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [query, setQuery] = useState(searchParams.get('q') || '')
   const [sort, setSort] = useState('new')
+  const [page, setPage] = useState(1)
+  const [showFilters, setShowFilters] = useState(false)
+  const [filters, setFilters] = useState({
+    regionId: searchParams.get('viloyat') || '',
+    districtId: searchParams.get('tuman') || '',
+    categoryId: category,
+    minPrice: searchParams.get('min') || '',
+    maxPrice: searchParams.get('max') || '',
+  })
 
   const listings = useMemo(() => {
-    let result = allListings.filter((l) =>
-      `${l.title} ${l.location}`.toLowerCase().includes(query.toLowerCase())
-    )
+    const region = filters.regionId ? REGION_BY_ID[filters.regionId] : null
+    let result = allListings.filter((l) => {
+      const haystack = `${l.title} ${l.location}`.toLowerCase()
+      if (query.trim() && !haystack.includes(query.trim().toLowerCase())) return false
+      if (region && !l.location.toLowerCase().includes(region.name.toLowerCase())) return false
+      if (filters.districtId && !l.location.toLowerCase().includes(filters.districtId.toLowerCase())) return false
+      const price = parsePrice(l.price)
+      if (filters.minPrice && price < Number(filters.minPrice)) return false
+      if (filters.maxPrice && price > Number(filters.maxPrice)) return false
+      return true
+    })
     if (sort === 'price-asc') {
       result = [...result].sort((a, b) => parsePrice(a.price) - parsePrice(b.price))
     } else if (sort === 'price-desc') {
       result = [...result].sort((a, b) => parsePrice(b.price) - parsePrice(a.price))
     }
     return result
-  }, [allListings, query, sort])
+  }, [allListings, query, sort, filters])
+
+  useEffect(() => {
+    setPage(1)
+  }, [listings])
+
+  const totalPages = Math.max(1, Math.ceil(listings.length / PAGE_SIZE))
+  const pagedListings = listings.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const handleSearch = () => {
+    const targetCategory = filters.categoryId || category
+    const params = new URLSearchParams()
+    if (filters.regionId) params.set('viloyat', filters.regionId)
+    if (filters.districtId) params.set('tuman', filters.districtId)
+    if (filters.minPrice) params.set('min', filters.minPrice)
+    if (filters.maxPrice) params.set('max', filters.maxPrice)
+    if (query.trim()) params.set('q', query.trim())
+
+    if (targetCategory !== category) {
+      navigate(`/${targetCategory}${params.toString() ? `?${params}` : ''}`)
+      return
+    }
+    setSearchParams(params)
+    setShowFilters(false)
+  }
 
   return (
     <main className="main-content">
@@ -41,7 +90,7 @@ export default function ListingsPage({ category }) {
           <ArrowLeft size={20} strokeWidth={2.2} />
         </Link>
         <h1 className="listings-mobile-title">{info.label}</h1>
-        <button className="listings-filter-btn">
+        <button className="listings-filter-btn" onClick={() => setShowFilters((s) => !s)}>
           <SlidersHorizontal size={15} strokeWidth={2.2} />
           Filtr
         </button>
@@ -55,7 +104,7 @@ export default function ListingsPage({ category }) {
             </span>
             {info.label}
           </h1>
-          <p className="listings-subtitle">{allListings.length} ta e'lon topildi</p>
+          <p className="listings-subtitle">{listings.length} ta e'lon topildi</p>
         </div>
 
         <div className="listings-controls">
@@ -65,6 +114,14 @@ export default function ListingsPage({ category }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
+          <button
+            type="button"
+            className={`listings-filter-toggle desktop-only${showFilters ? ' is-active' : ''}`}
+            onClick={() => setShowFilters((s) => !s)}
+          >
+            <SlidersHorizontal size={16} strokeWidth={2} />
+            Filtrlar
+          </button>
           <div className="listings-sort desktop-only">
             <SlidersHorizontal size={16} strokeWidth={2} color="#94A3B8" />
             <select value={sort} onChange={(e) => setSort(e.target.value)}>
@@ -78,23 +135,11 @@ export default function ListingsPage({ category }) {
         </div>
       </section>
 
-      <div className="listings-chips mobile-only">
-        <button className="listings-chip">
-          <MapPin size={14} strokeWidth={2.2} />
-          Toshkent
-        </button>
-        <button className="listings-chip">
-          <BedDouble size={14} strokeWidth={2.2} />
-          Xonalar
-        </button>
-        <button className="listings-chip">
-          <Wallet size={14} strokeWidth={2.2} />
-          Narxi
-        </button>
-        <button className="listings-chip listings-chip-icon" aria-label="Filtrlar">
-          <SlidersHorizontal size={15} strokeWidth={2.2} />
-        </button>
-      </div>
+      {showFilters && (
+        <div className="listings-filters">
+          <FilterBar filters={filters} onChange={setFilters} onSearch={handleSearch} />
+        </div>
+      )}
 
       <div className="listings-count-row mobile-only">
         <span className="listings-count-text">{listings.length} ta e'lon topildi</span>
@@ -110,17 +155,19 @@ export default function ListingsPage({ category }) {
         </div>
       </div>
 
-      {listings.length > 0 ? (
+      {pagedListings.length > 0 ? (
         <div className="listings-grid">
-          {listings.map((listing) => (
+          {pagedListings.map((listing) => (
             <PropertyCard key={listing.id} listing={listing} />
           ))}
         </div>
       ) : (
         <div className="listings-empty">
-          <p>Hech narsa topilmadi. Boshqa so'rov bilan qidirib ko'ring.</p>
+          <p>Hech narsa topilmadi. Boshqa so'rov yoki filtrlar bilan qidirib ko'ring.</p>
         </div>
       )}
+
+      <Pagination page={page} totalPages={totalPages} onChange={setPage} />
     </main>
   )
 }

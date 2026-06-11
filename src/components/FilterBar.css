@@ -1,0 +1,238 @@
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.filter-field {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+}
+
+.filter-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  padding: 9px 13px;
+  cursor: pointer;
+  background: var(--color-surface);
+  font-family: inherit;
+  text-align: left;
+  transition: border-color .15s;
+}
+
+.filter-trigger:hover,
+.filter-trigger.is-open {
+  border-color: var(--color-primary-light);
+}
+
+.filter-trigger-icon {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.filter-trigger-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-trigger-label {
+  font-size: 11px;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+
+.filter-trigger-value {
+  font-size: 14px;
+  color: var(--color-text);
+  font-weight: 700;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-trigger-chevron {
+  color: #CBD5E1;
+  flex-shrink: 0;
+  transition: transform .15s;
+}
+
+.filter-trigger.is-open .filter-trigger-chevron {
+  transform: rotate(180deg);
+}
+
+.filter-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 10px;
+}
+
+.filter-panel-location {
+  display: flex;
+  gap: 6px;
+  width: 460px;
+  max-width: calc(100vw - 32px);
+}
+
+.filter-panel-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-panel-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 6px 10px;
+}
+
+.filter-panel-list {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-panel-type {
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-option:hover {
+  background: #F6F7FB;
+}
+
+.filter-option.is-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.filter-option svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.filter-panel-price {
+  width: 220px;
+  display: flex;
+  gap: 10px;
+}
+
+.filter-price-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-price-field span {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--color-text-faint);
+  padding: 0 2px;
+}
+
+.filter-price-field input {
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--color-text);
+  outline: none;
+  width: 100%;
+}
+
+.filter-price-field input:focus {
+  border-color: var(--color-primary-light);
+}
+
+.filter-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 28px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: var(--shadow-primary-btn);
+  flex-shrink: 0;
+}
+
+@media (max-width: 1100px) {
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .filter-field {
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 900px) {
+  .filter-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .filter-field {
+    min-width: 0;
+  }
+
+  .filter-search-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 13px;
+  }
+
+  .filter-panel {
+    left: auto;
+    right: 0;
+  }
+
+  .filter-panel-location {
+    width: min(380px, calc(100vw - 32px));
+  }
+}

@@ -1,4 +1,4 @@
-import { Eye, Heart, MessageSquare, FileText, ArrowUp, ArrowDown, BarChart3 } from 'lucide-react'
+import { Eye, Heart, PhoneCall, FileText, ArrowUp, ArrowDown, BarChart3 } from 'lucide-react'
 import MarketStats from '../components/MarketStats.jsx'
 import './ListingsPage.css'
 import './StatisticsPage.css'
@@ -6,7 +6,7 @@ import './StatisticsPage.css'
 const SUMMARY = [
   { id: 'views', icon: Eye, label: "Jami ko'rishlar", value: '8 240', change: '+18%', up: true, color: '#4F46E5', bg: '#E8EEFF' },
   { id: 'listings', icon: FileText, label: "Faol e'lonlar", value: '3', change: '+1', up: true, color: '#F97316', bg: '#FFF1E6' },
-  { id: 'messages', icon: MessageSquare, label: 'Yangi xabarlar', value: '5', change: '+2', up: true, color: '#16A34A', bg: '#E7F8EE' },
+  { id: 'calls', icon: PhoneCall, label: "Qo'ng'iroqlar", value: '5', change: '+2', up: true, color: '#16A34A', bg: '#E7F8EE' },
   { id: 'favorites', icon: Heart, label: 'Sevimliga qoʻshilgan', value: '12', change: '-3%', up: false, color: '#EF4444', bg: '#FDECEC' },
 ]
 

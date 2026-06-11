@@ -57,6 +57,10 @@
   cursor: pointer;
 }
 
+.mobile-header-notif-wrap {
+  position: relative;
+}
+
 .mobile-header-bell {
   position: relative;
   width: 36px;

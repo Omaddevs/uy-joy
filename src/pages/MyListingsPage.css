@@ -20,6 +20,20 @@
   gap: 14px;
 }
 
+.my-listings-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 26px 0 14px;
+}
+
+.my-listings-section-title svg {
+  color: var(--color-orange);
+}
+
 .my-listing-row {
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);

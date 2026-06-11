@@ -1,16 +1,25 @@
 import { NavLink } from 'react-router-dom'
-import { Home, Search, Heart, MessageSquare, User } from 'lucide-react'
+import { Home, Search, Heart, FileText, User, LogIn } from 'lucide-react'
+import { useAuth } from '../context/AuthContext.jsx'
 import './BottomNav.css'
 
-const NAV_ITEMS = [
+const BASE_NAV_ITEMS = [
   { to: '/', label: 'Asosiy', icon: Home, end: true },
   { to: '/sotuv', label: 'Qidirish', icon: Search },
   { to: '/sevimlilar', label: 'Sevimlilar', icon: Heart },
-  { to: '/xabarlar', label: 'Xabarlar', icon: MessageSquare, badge: 2 },
-  { to: '/sozlamalar', label: 'Profil', icon: User },
+  { to: '/elonlarim', label: "E'lonlarim", icon: FileText },
 ]
 
 export default function BottomNav() {
+  const { user } = useAuth()
+
+  const NAV_ITEMS = [
+    ...BASE_NAV_ITEMS,
+    user
+      ? { to: '/sozlamalar', label: 'Profil', icon: User }
+      : { to: '/kirish', label: 'Kirish', icon: LogIn },
+  ]
+
   return (
     <nav className="bottom-nav mobile-only">
       {NAV_ITEMS.map(({ to, label, icon: Icon, badge, end }) => (

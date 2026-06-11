@@ -1,19 +1,22 @@
 import { useState } from 'react'
-import { useParams, Link, Navigate } from 'react-router-dom'
+import { useParams, Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import {
   ArrowLeft,
   Heart,
   MapPin,
   Phone,
-  MessageSquare,
+  PhoneCall,
   Star,
   BedDouble,
   Maximize,
   Trees,
   Building2,
   Wifi,
+  Send,
+  User,
 } from 'lucide-react'
 import { useFavorites } from '../context/FavoritesContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { LISTINGS_BY_ID } from '../data/listings.js'
 import { CATEGORY_BY_ID } from '../data/categories.js'
 import './ListingDetailPage.css'
@@ -26,16 +29,68 @@ const FEATURE_ICONS = {
   wifi: Wifi,
 }
 
+const INITIAL_COMMENTS = [
+  {
+    id: 1,
+    name: 'Sardor Aliyev',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=160&q=80&auto=format&fit=crop',
+    text: "Joylashuvi juda qulay ekan, qo'shni hududlarni ko'rib chiqdim. Narxi haqida kelishish mumkinmi?",
+    time: '2 kun oldin',
+  },
+  {
+    id: 2,
+    name: 'Nilufar Saidova',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&q=80&auto=format&fit=crop',
+    text: "Rasmlar haqiqiy holatga mos keladimi? Ko'rgani borish mumkinmi?",
+    time: '1 kun oldin',
+  },
+]
+
 export default function ListingDetailPage() {
   const { id } = useParams()
   const listing = LISTINGS_BY_ID[id]
   const { favorites, toggleFavorite } = useFavorites()
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [activeImg, setActiveImg] = useState(0)
+  const [showPhone, setShowPhone] = useState(false)
+  const [comments, setComments] = useState(INITIAL_COMMENTS)
+  const [commentDraft, setCommentDraft] = useState('')
 
   if (!listing) return <Navigate to="/" replace />
 
   const isFavorite = !!favorites[listing.id]
   const category = CATEGORY_BY_ID[listing.category]
+
+  const requireAuth = () => {
+    if (user) return true
+    navigate('/kirish', { state: { from: location } })
+    return false
+  }
+
+  const handleFavorite = () => {
+    if (!requireAuth()) return
+    toggleFavorite(listing.id)
+  }
+
+  const handleCall = () => {
+    if (!requireAuth()) return
+    setShowPhone(true)
+    window.location.href = `tel:${listing.seller.phone.replace(/[^\d+]/g, '')}`
+  }
+
+  const handleAddComment = (e) => {
+    e.preventDefault()
+    if (!requireAuth()) return
+    const text = commentDraft.trim()
+    if (!text) return
+    setComments((prev) => [
+      ...prev,
+      { id: prev.length + 1, name: user.name, avatar: user.avatar, text, time: 'hozir' },
+    ])
+    setCommentDraft('')
+  }
 
   return (
     <main className="main-content">
@@ -54,7 +109,7 @@ export default function ListingDetailPage() {
               </span>
               <button
                 className={`detail-fav${isFavorite ? ' is-active' : ''}`}
-                onClick={() => toggleFavorite(listing.id)}
+                onClick={handleFavorite}
                 aria-label="Sevimlilarga qo'shish"
               >
                 <Heart
@@ -102,6 +157,36 @@ export default function ListingDetailPage() {
 
             <h2 className="detail-section-title">Tavsif</h2>
             <p className="detail-description">{listing.description}</p>
+
+            <h2 className="detail-section-title">Sharhlar ({comments.length})</h2>
+            <div className="detail-comments">
+              {comments.map((c) => (
+                <div key={c.id} className="detail-comment">
+                  <img className="detail-comment-avatar" src={c.avatar} alt={c.name} />
+                  <div className="detail-comment-body">
+                    <div className="detail-comment-head">
+                      <span className="detail-comment-name">{c.name}</span>
+                      <span className="detail-comment-time">{c.time}</span>
+                    </div>
+                    <p className="detail-comment-text">{c.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <form className="detail-comment-form" onSubmit={handleAddComment}>
+              <div className="detail-comment-form-avatar">
+                {user ? <img src={user.avatar} alt={user.name} /> : <User size={18} strokeWidth={2} />}
+              </div>
+              <input
+                placeholder={user ? 'Sharh yozing...' : "Sharh yozish uchun tizimga kiring"}
+                value={commentDraft}
+                onChange={(e) => setCommentDraft(e.target.value)}
+              />
+              <button type="submit" aria-label="Yuborish">
+                <Send size={17} strokeWidth={2.2} />
+              </button>
+            </form>
           </div>
         </div>
 
@@ -111,13 +196,13 @@ export default function ListingDetailPage() {
               {listing.price}
               <span className="detail-price-unit">{listing.unit}</span>
             </div>
-            <button className="detail-contact-btn">
+            <button className="detail-contact-btn" onClick={() => setShowPhone(true)}>
               <Phone size={18} strokeWidth={2} />
-              Telefon raqamni ko'rsatish
+              {showPhone ? listing.seller.phone : "Telefon raqamni ko'rsatish"}
             </button>
-            <button className="detail-message-btn">
-              <MessageSquare size={18} strokeWidth={2} />
-              Xabar yozish
+            <button className="detail-message-btn" onClick={handleCall}>
+              <PhoneCall size={18} strokeWidth={2} />
+              Qo'ng'iroq qilish
             </button>
           </div>
 

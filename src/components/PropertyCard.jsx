@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Heart, MapPin, BedDouble, Maximize, Trees, Building2, Wifi } from 'lucide-react'
 import { useFavorites } from '../context/FavoritesContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import './PropertyCard.css'
 
 const FEATURE_ICONS = {
@@ -12,8 +13,11 @@ const FEATURE_ICONS = {
 }
 
 export default function PropertyCard({ listing }) {
-  const { id, tag, tagColor, img, title, price, unit, features, location, time } = listing
+  const { id, tag, tagColor, img, title, price, unit, features, location: place, time } = listing
   const { favorites, toggleFavorite } = useFavorites()
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  const routerLocation = useLocation()
   const isFavorite = !!favorites[id]
 
   return (
@@ -27,6 +31,10 @@ export default function PropertyCard({ listing }) {
           className={`property-card-fav${isFavorite ? ' is-active' : ''}`}
           onClick={(e) => {
             e.preventDefault()
+            if (!user) {
+              navigate('/kirish', { state: { from: routerLocation } })
+              return
+            }
             toggleFavorite(id)
           }}
           aria-label="Sevimlilarga qo'shish"
@@ -62,7 +70,7 @@ export default function PropertyCard({ listing }) {
         <div className="property-card-meta">
           <div className="property-card-location">
             <MapPin size={13} strokeWidth={2} color="#CBD5E1" />
-            {location}
+            {place}
           </div>
           <div className="property-card-time">{time}</div>
         </div>

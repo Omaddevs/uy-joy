@@ -1,36 +1,50 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
   Home,
   Key,
   Trees,
   Mountain,
-  Building,
+  Building2,
+  Hotel,
   Heart,
   FileText,
-  MessageSquare,
   BarChart3,
   Settings,
   Plus,
-  PlayCircle,
-  Apple,
+  LogOut,
+  ShieldCheck,
 } from 'lucide-react'
+import { useAuth } from '../context/AuthContext.jsx'
 import './Sidebar.css'
 
-const NAV_ITEMS = [
+const BASE_NAV_ITEMS = [
   { to: '/', label: 'Asosiy', icon: Home, end: true },
-  { to: '/sotuv', label: 'Sotuvdagi uylar', icon: Home },
+  { to: '/sotuv', label: 'Sotuvdagi uylar', icon: Building2 },
   { to: '/ijara', label: 'Ijara', icon: Key },
   { to: '/yer', label: 'Quruq yerlar', icon: Trees },
   { to: '/dacha', label: 'Dachalar', icon: Mountain },
-  { to: '/mexmonxona', label: 'Mexmonxonalar', icon: Building },
+  { to: '/mexmonxona', label: 'Mexmonxonalar', icon: Hotel },
   { to: '/sevimlilar', label: 'Sevimlilar', icon: Heart },
   { to: '/elonlarim', label: "Mening e'lonlarim", icon: FileText },
-  { to: '/xabarlar', label: 'Xabarlar', icon: MessageSquare, badge: 2 },
-  { to: '/statistika', label: 'Statistika', icon: BarChart3 },
   { to: '/sozlamalar', label: 'Sozlamalar', icon: Settings },
 ]
 
+const ADMIN_NAV_ITEM = { to: '/statistika', label: 'Statistika', icon: BarChart3 }
+
 export default function Sidebar() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const navItems =
+    user?.role === 'admin'
+      ? [...BASE_NAV_ITEMS.slice(0, -1), ADMIN_NAV_ITEM, BASE_NAV_ITEMS[BASE_NAV_ITEMS.length - 1]]
+      : BASE_NAV_ITEMS
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
     <aside className="sidebar">
       <NavLink to="/" className="sidebar-logo">
@@ -43,7 +57,7 @@ export default function Sidebar() {
       </NavLink>
 
       <nav className="sidebar-nav">
-        {NAV_ITEMS.map(({ to, label, icon: Icon, badge, end }) => (
+        {navItems.map(({ to, label, icon: Icon, badge, end }) => (
           <NavLink
             key={to}
             to={to}
@@ -69,28 +83,33 @@ export default function Sidebar() {
         </NavLink>
       </div>
 
-      <div className="sidebar-app-promo">
-        <p className="sidebar-app-promo-title">UyTop ilovasini yuklab oling</p>
-        <p className="sidebar-app-promo-text">
-          Qidiruv va e'lon joylashni yanada osonlashtiring.
-        </p>
-        <div className="sidebar-store-buttons">
-          <div className="sidebar-store-btn">
-            <PlayCircle size={20} strokeWidth={1.8} className="sidebar-store-icon" />
-            <div>
-              <div className="sidebar-store-caption">GET IT ON</div>
-              <div className="sidebar-store-name">Google Play</div>
-            </div>
+      {user ? (
+        <div className="sidebar-account">
+          <div className="sidebar-account-card">
+            <NavLink to="/sozlamalar" className="sidebar-account-link">
+              <img className="sidebar-account-avatar" src={user.avatar} alt={user.name} />
+              <div className="sidebar-account-body">
+                <div className="sidebar-account-name">
+                  {user.name}
+                  {user.role === 'admin' && <ShieldCheck size={14} strokeWidth={2.4} color="var(--color-primary)" />}
+                </div>
+                <div className="sidebar-account-email">{user.email}</div>
+              </div>
+            </NavLink>
           </div>
-          <div className="sidebar-store-btn">
-            <Apple size={20} strokeWidth={1.8} className="sidebar-store-icon" />
-            <div>
-              <div className="sidebar-store-caption">Download on the</div>
-              <div className="sidebar-store-name">App Store</div>
-            </div>
-          </div>
+          <button className="sidebar-logout-btn" onClick={handleLogout}>
+            <LogOut size={17} strokeWidth={2} />
+            Chiqish
+          </button>
         </div>
-      </div>
+      ) : (
+        <div className="sidebar-account">
+          <button className="sidebar-login-btn" onClick={() => navigate('/kirish')}>
+            <LogOut size={17} strokeWidth={2} />
+            Tizimga kirish
+          </button>
+        </div>
+      )}
     </aside>
   )
 }
