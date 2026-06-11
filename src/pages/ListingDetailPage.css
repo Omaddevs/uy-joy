@@ -392,3 +392,59 @@
     position: static;
   }
 }
+
+@media (max-width: 900px) {
+  .detail-gallery-main {
+    height: 230px;
+    border-radius: var(--radius-lg);
+  }
+
+  .detail-thumb {
+    width: 64px;
+    height: 48px;
+    border-radius: 8px;
+  }
+
+  .detail-card {
+    padding: 16px;
+  }
+
+  .detail-title {
+    font-size: 19px;
+  }
+
+  .detail-location {
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .detail-time {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .detail-features {
+    gap: 8px;
+    margin-top: 14px;
+    padding: 12px 0;
+  }
+
+  .detail-feature {
+    font-size: 12.5px;
+    padding: 7px 11px;
+  }
+
+  .detail-section-title {
+    font-size: 15.5px;
+    margin-top: 16px;
+  }
+
+  .detail-description {
+    font-size: 14px;
+  }
+
+  .detail-comment-form input {
+    font-size: 13px;
+  }
+}

@@ -153,6 +153,11 @@ export default function SettingsPage() {
           </button>
         </nav>
 
+        <button className="settings-mobile-logout mobile-only" onClick={handleLogout}>
+          <LogOut size={17} strokeWidth={2} />
+          Chiqish
+        </button>
+
         <div className="card-surface settings-content">
           {tab === 'profile' && (
             <>
