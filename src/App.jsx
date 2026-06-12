@@ -5,6 +5,8 @@ import { NotificationsProvider } from './context/NotificationsContext.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
 import AuthLayout from './layouts/AuthLayout.jsx'
 import HomePage from './pages/HomePage.jsx'
+import CategoriesPage from './pages/CategoriesPage.jsx'
+import SearchMapPage from './pages/SearchMapPage.jsx'
 import ListingsPage from './pages/ListingsPage.jsx'
 import ListingDetailPage from './pages/ListingDetailPage.jsx'
 import FavoritesPage from './pages/FavoritesPage.jsx'
@@ -40,6 +42,8 @@ export default function App() {
           <Routes>
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
+              <Route path="/kategoriyalar" element={<CategoriesPage />} />
+              <Route path="/qidirish" element={<SearchMapPage />} />
               <Route path="/sotuv" element={<ListingsPage category="sotuv" />} />
               <Route path="/ijara" element={<ListingsPage category="ijara" />} />
               <Route path="/yer" element={<ListingsPage category="yer" />} />

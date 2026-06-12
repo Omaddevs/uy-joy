@@ -5,7 +5,7 @@ import './BottomNav.css'
 
 const BASE_NAV_ITEMS = [
   { to: '/', label: 'Asosiy', icon: Home, end: true },
-  { to: '/sotuv', label: 'Qidirish', icon: Search },
+  { to: '/qidirish', label: 'Qidirish', icon: Search },
   { to: '/sevimlilar', label: 'Sevimlilar', icon: Heart },
   { to: '/elonlarim', label: "E'lonlarim", icon: FileText },
 ]

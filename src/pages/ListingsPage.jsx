@@ -9,7 +9,7 @@ import { getListingsByCategory } from '../data/listings.js'
 import { REGION_BY_ID } from '../data/regions.js'
 import './ListingsPage.css'
 
-const PAGE_SIZE = 8
+const PAGE_SIZE = 4
 
 function parsePrice(price) {
   return Number(String(price).replace(/[^0-9]/g, '')) || 0
@@ -90,7 +90,7 @@ export default function ListingsPage({ category }) {
           <ArrowLeft size={20} strokeWidth={2.2} />
         </Link>
         <h1 className="listings-mobile-title">{info.label}</h1>
-        <button className="listings-filter-btn" onClick={() => setShowFilters((s) => !s)}>
+        <button className="listings-filter-btn" onClick={handleSearch}>
           <SlidersHorizontal size={15} strokeWidth={2.2} />
           Filtr
         </button>
@@ -110,7 +110,7 @@ export default function ListingsPage({ category }) {
         <div className="listings-controls">
           <input
             className="listings-search"
-            placeholder="Nomi yoki manzil bo'yicha qidirish"
+            placeholder="Qidirish (masalan: Chilonzor, 3 xonali)"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -135,8 +135,12 @@ export default function ListingsPage({ category }) {
         </div>
       </section>
 
+      <div className="listings-filters-mobile mobile-only">
+        <FilterBar filters={filters} onChange={setFilters} onSearch={handleSearch} className="compact" />
+      </div>
+
       {showFilters && (
-        <div className="listings-filters">
+        <div className="listings-filters desktop-only" style={{ display: 'block' }}>
           <FilterBar filters={filters} onChange={setFilters} onSearch={handleSearch} />
         </div>
       )}

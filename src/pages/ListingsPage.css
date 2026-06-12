@@ -99,6 +99,10 @@
   font-weight: 600;
 }
 
+.listings-grid + .pagination {
+  margin-top: 24px;
+}
+
 @media (max-width: 1300px) {
   .listings-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -204,6 +208,10 @@
   color: var(--color-primary);
   font-weight: 700;
   font-size: 13px;
+}
+
+.listings-filters-mobile {
+  margin-top: -4px;
 }
 
 @media (max-width: 900px) {
