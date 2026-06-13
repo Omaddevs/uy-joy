@@ -54,6 +54,11 @@
   font-size: 13px;
   font-weight: 600;
   color: #334155;
+  font-family: inherit;
+}
+
+.header-location:hover {
+  background: #F8F9FC;
 }
 
 .header-actions {

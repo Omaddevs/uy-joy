@@ -4,9 +4,10 @@ import { ArrowLeft, SlidersHorizontal } from 'lucide-react'
 import PropertyCard from '../components/PropertyCard.jsx'
 import FilterBar from '../components/FilterBar.jsx'
 import Pagination from '../components/Pagination.jsx'
-import { CATEGORY_BY_ID } from '../data/categories.js'
+import { CATEGORY_BY_ID, RECOMMENDATIONS } from '../data/categories.js'
 import { getListingsByCategory } from '../data/listings.js'
 import { REGION_BY_ID } from '../data/regions.js'
+import { useRegion } from '../context/RegionContext.jsx'
 import './ListingsPage.css'
 
 const PAGE_SIZE = 4
@@ -22,28 +23,35 @@ const SORT_OPTIONS = [
 ]
 
 export default function ListingsPage({ category }) {
-  const info = CATEGORY_BY_ID[category]
+  const info = category === 'tavsiyalar' ? RECOMMENDATIONS : CATEGORY_BY_ID[category]
   const allListings = useMemo(() => getListingsByCategory(category), [category])
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const { regionId: globalRegionId } = useRegion()
 
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [sort, setSort] = useState('new')
   const [page, setPage] = useState(1)
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState({
-    regionId: searchParams.get('viloyat') || '',
+    regionId: searchParams.get('viloyat') || globalRegionId,
     districtId: searchParams.get('tuman') || '',
-    categoryId: category,
+    categoryId: category === 'tavsiyalar' ? '' : category,
     minPrice: searchParams.get('min') || '',
     maxPrice: searchParams.get('max') || '',
   })
+
+  useEffect(() => {
+    if (searchParams.get('viloyat')) return
+    setFilters((prev) => ({ ...prev, regionId: globalRegionId, districtId: '' }))
+  }, [globalRegionId, searchParams])
 
   const listings = useMemo(() => {
     const region = filters.regionId ? REGION_BY_ID[filters.regionId] : null
     let result = allListings.filter((l) => {
       const haystack = `${l.title} ${l.location}`.toLowerCase()
       if (query.trim() && !haystack.includes(query.trim().toLowerCase())) return false
+      if (filters.categoryId && l.category !== filters.categoryId) return false
       if (region && !l.location.toLowerCase().includes(region.name.toLowerCase())) return false
       if (filters.districtId && !l.location.toLowerCase().includes(filters.districtId.toLowerCase())) return false
       const price = parsePrice(l.price)

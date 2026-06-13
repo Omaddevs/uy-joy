@@ -12,29 +12,6 @@
 .mobile-header-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.mobile-header-logo-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.mobile-header-logo-text {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -.4px;
-  color: var(--color-text);
-}
-
-.mobile-header-logo-accent {
-  color: var(--color-primary);
 }
 
 .mobile-header-actions {
@@ -55,6 +32,11 @@
   font-weight: 600;
   color: var(--color-text);
   cursor: pointer;
+  font-family: inherit;
+}
+
+.mobile-header .region-picker {
+  position: relative;
 }
 
 .mobile-header-notif-wrap {

@@ -1,5 +1,6 @@
 import { Link, Outlet } from 'react-router-dom'
-import { Home, ShieldCheck, Heart, MessageSquare, TrendingUp } from 'lucide-react'
+import { ShieldCheck, Heart, MessageSquare, TrendingUp } from 'lucide-react'
+import Logo from '../components/Logo.jsx'
 import '../pages/AuthPage.css'
 import './AuthLayout.css'
 
@@ -15,12 +16,7 @@ export default function AuthLayout() {
     <div className="auth-screen">
       <aside className="auth-screen-brand">
         <Link to="/" className="auth-screen-logo">
-          <div className="auth-logo-icon">
-            <Home size={20} strokeWidth={2} />
-          </div>
-          <span className="auth-logo-text">
-            Uy<span className="auth-logo-accent">Top</span>
-          </span>
+          <Logo variant="light" size="auth" />
         </Link>
 
         <div className="auth-screen-brand-content">
@@ -44,12 +40,7 @@ export default function AuthLayout() {
 
       <main className="auth-screen-form">
         <Link to="/" className="auth-screen-mobile-logo">
-          <div className="auth-logo-icon">
-            <Home size={18} strokeWidth={2} />
-          </div>
-          <span className="auth-logo-text">
-            Uy<span className="auth-logo-accent">Top</span>
-          </span>
+          <Logo variant="brand" size="auth" />
         </Link>
 
         <div className="auth-wrap">

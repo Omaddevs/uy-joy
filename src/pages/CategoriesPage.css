@@ -19,7 +19,47 @@
   gap: 10px;
 }
 
-@media (min-width: 700px) {
+@media (max-width: 900px) {
+  .categories-page-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .categories-page-grid .category-card:nth-child(1),
+  .categories-page-grid .category-card:nth-child(2) {
+    grid-column: span 3;
+    min-height: 118px;
+  }
+
+  .categories-page-grid .category-card:nth-child(n + 3) {
+    grid-column: span 2;
+    min-height: 108px;
+  }
+
+  .categories-page-grid .category-card:nth-child(1) .category-bento-art,
+  .categories-page-grid .category-card:nth-child(2) .category-bento-art {
+    width: 86px;
+    height: 86px;
+  }
+
+  .categories-page-grid .category-card:nth-child(1) .category-bento-icon,
+  .categories-page-grid .category-card:nth-child(2) .category-bento-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .categories-page-grid .category-card[data-category="dacha"] .category-bento-art {
+    width: 94px;
+    height: 94px;
+  }
+
+  .categories-page-grid .category-card[data-category="dacha"] .category-bento-icon {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (min-width: 901px) {
   .categories-page-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;

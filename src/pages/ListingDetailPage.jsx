@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useParams, Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import {
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
   Heart,
   MapPin,
   Phone,
@@ -57,6 +59,33 @@ export default function ListingDetailPage() {
   const [showPhone, setShowPhone] = useState(false)
   const [comments, setComments] = useState(INITIAL_COMMENTS)
   const [commentDraft, setCommentDraft] = useState('')
+  const thumbsRef = useRef(null)
+
+  const imageCount = listing?.images?.length ?? 0
+  const hasMultipleImages = imageCount > 1
+
+  const goToPrev = useCallback(() => {
+    setActiveImg((i) => (i === 0 ? imageCount - 1 : i - 1))
+  }, [imageCount])
+
+  const goToNext = useCallback(() => {
+    setActiveImg((i) => (i === imageCount - 1 ? 0 : i + 1))
+  }, [imageCount])
+
+  useEffect(() => {
+    if (!hasMultipleImages) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') goToPrev()
+      if (e.key === 'ArrowRight') goToNext()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [hasMultipleImages, goToPrev, goToNext])
+
+  useEffect(() => {
+    const activeThumb = thumbsRef.current?.querySelector('.detail-thumb.is-active')
+    activeThumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+  }, [activeImg])
 
   if (!listing) return <Navigate to="/" replace />
 
@@ -103,7 +132,11 @@ export default function ListingDetailPage() {
         <div className="detail-main">
           <div className="detail-gallery">
             <div className="detail-gallery-main">
-              <img src={listing.images[activeImg]} alt={listing.title} />
+              <img
+                key={activeImg}
+                src={listing.images[activeImg]}
+                alt={`${listing.title} — ${activeImg + 1}/${imageCount}`}
+              />
               <span className="detail-tag" style={{ background: listing.tagColor }}>
                 {listing.tag}
               </span>
@@ -119,9 +152,32 @@ export default function ListingDetailPage() {
                   color={isFavorite ? '#EF4444' : '#64748B'}
                 />
               </button>
+              {hasMultipleImages && (
+                <>
+                  <button
+                    type="button"
+                    className="detail-gallery-nav detail-gallery-nav--prev"
+                    onClick={goToPrev}
+                    aria-label="Oldingi rasm"
+                  >
+                    <ChevronLeft size={22} strokeWidth={2.2} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="detail-gallery-nav detail-gallery-nav--next"
+                    onClick={goToNext}
+                    aria-label="Keyingi rasm"
+                  >
+                    <ChevronRight size={22} strokeWidth={2.2} aria-hidden="true" />
+                  </button>
+                  <span className="detail-gallery-counter" aria-live="polite">
+                    {activeImg + 1} / {imageCount}
+                  </span>
+                </>
+              )}
             </div>
-            {listing.images.length > 1 && (
-              <div className="detail-gallery-thumbs">
+            {hasMultipleImages && (
+              <div className="detail-gallery-thumbs" ref={thumbsRef}>
                 {listing.images.map((src, i) => (
                   <button
                     key={src}

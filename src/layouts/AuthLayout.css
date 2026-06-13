@@ -20,19 +20,8 @@
 .auth-screen-logo {
   position: relative;
   z-index: 1;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-}
-
-.auth-screen-brand .auth-logo-icon {
-  background: rgba(255, 255, 255, .16);
-  box-shadow: none;
-}
-
-.auth-screen-brand .auth-logo-text,
-.auth-screen-brand .auth-logo-accent {
-  color: #fff;
 }
 
 .auth-screen-brand-content {
@@ -121,11 +110,6 @@
   align-items: center;
   gap: 9px;
   margin-bottom: 22px;
-}
-
-.auth-screen-mobile-logo .auth-logo-icon {
-  width: 36px;
-  height: 36px;
 }
 
 .auth-wrap {

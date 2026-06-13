@@ -442,5 +442,6 @@ export const LISTINGS = [
 export const LISTINGS_BY_ID = Object.fromEntries(LISTINGS.map((l) => [l.id, l]))
 
 export function getListingsByCategory(category) {
+  if (category === 'tavsiyalar') return LISTINGS
   return LISTINGS.filter((l) => l.category === category)
 }

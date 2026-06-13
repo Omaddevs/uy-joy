@@ -6,7 +6,7 @@ export default function Recommendations() {
     <ListingSection
       title="Siz uchun tavsiya etamiz"
       listings={LISTINGS}
-      viewAllTo="/kategoriyalar"
+      viewAllTo="/tavsiyalar"
     />
   )
 }

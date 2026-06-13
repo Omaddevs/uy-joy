@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, MapPin, ChevronDown, Heart, Bell, LogIn, UserPlus } from 'lucide-react'
+import { Search, Heart, Bell, LogIn, UserPlus, ChevronDown } from 'lucide-react'
+import RegionPicker from './RegionPicker.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useNotifications } from '../context/NotificationsContext.jsx'
 import NotificationsPanel from './NotificationsPanel.jsx'
@@ -33,11 +34,7 @@ export default function Header() {
           className="header-search-input"
           placeholder="Qidirish (masalan: Toshkent, Chilonzor, 3 xonali)"
         />
-        <div className="header-location">
-          <MapPin size={15} strokeWidth={2} color="#4F46E5" />
-          <span>Toshkent</span>
-          <ChevronDown size={14} strokeWidth={2} color="#94A3B8" />
-        </div>
+        <RegionPicker buttonClassName="header-location" />
       </div>
 
       <div className="header-actions">

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
 import { FavoritesProvider } from './context/FavoritesContext.jsx'
 import { NotificationsProvider } from './context/NotificationsContext.jsx'
+import { RegionProvider } from './context/RegionContext.jsx'
 import MainLayout from './layouts/MainLayout.jsx'
 import AuthLayout from './layouts/AuthLayout.jsx'
 import HomePage from './pages/HomePage.jsx'
@@ -38,12 +39,14 @@ export default function App() {
     <AuthProvider>
       <FavoritesProvider>
       <NotificationsProvider>
+        <RegionProvider>
         <BrowserRouter>
           <Routes>
             <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/kategoriyalar" element={<CategoriesPage />} />
               <Route path="/qidirish" element={<SearchMapPage />} />
+              <Route path="/tavsiyalar" element={<ListingsPage category="tavsiyalar" />} />
               <Route path="/sotuv" element={<ListingsPage category="sotuv" />} />
               <Route path="/ijara" element={<ListingsPage category="ijara" />} />
               <Route path="/yer" element={<ListingsPage category="yer" />} />
@@ -97,6 +100,7 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        </RegionProvider>
       </NotificationsProvider>
       </FavoritesProvider>
     </AuthProvider>

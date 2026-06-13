@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Home, Key, Trees, Search } from 'lucide-react'
 import FilterBar, { EMPTY_FILTERS } from './FilterBar.jsx'
+import { useRegion } from '../context/RegionContext.jsx'
 import './Hero.css'
 
 const TABS = [
@@ -11,14 +12,20 @@ const TABS = [
 ]
 
 export default function Hero() {
-  const [filters, setFilters] = useState(EMPTY_FILTERS)
+  const { regionId } = useRegion()
+  const [filters, setFilters] = useState({ ...EMPTY_FILTERS, regionId })
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setFilters((prev) => ({ ...prev, regionId, districtId: '' }))
+  }, [regionId])
 
   const handleSearch = () => {
     const category = filters.categoryId || 'sotuv'
     const params = new URLSearchParams()
-    if (filters.regionId) params.set('viloyat', filters.regionId)
+    const activeRegion = filters.regionId || regionId
+    if (activeRegion) params.set('viloyat', activeRegion)
     if (filters.districtId) params.set('tuman', filters.districtId)
     if (filters.minPrice) params.set('min', filters.minPrice)
     if (filters.maxPrice) params.set('max', filters.maxPrice)

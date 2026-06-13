@@ -47,6 +47,7 @@ export default function CategoriesPage() {
               count={count}
               isActive={pathname === category.path}
               showArrow
+              bento
             />
           )
         })}

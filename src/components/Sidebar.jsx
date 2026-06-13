@@ -15,6 +15,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
+import Logo from './Logo.jsx'
 import './Sidebar.css'
 
 const BASE_NAV_ITEMS = [
@@ -48,12 +49,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <NavLink to="/" className="sidebar-logo">
-        <div className="sidebar-logo-icon">
-          <Home size={22} strokeWidth={2} color="#fff" />
-        </div>
-        <span className="sidebar-logo-text">
-          Uy<span className="sidebar-logo-accent">Top</span>
-        </span>
+        <Logo variant="brand" size="sidebar" />
       </NavLink>
 
       <nav className="sidebar-nav">

@@ -60,13 +60,13 @@ export default function FilterBar({ filters, onChange, onSearch, className = '' 
   }, [])
 
   useEffect(() => {
-    if (!open) return
+    if (!open || !isMobile) return
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = prev
     }
-  }, [open])
+  }, [open, isMobile])
 
   const toggle = (key) => setOpen((o) => (o === key ? null : key))
   const close = () => setOpen(null)

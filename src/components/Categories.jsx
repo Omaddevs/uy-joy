@@ -28,6 +28,7 @@ export default function Categories() {
                 {...category}
                 count={count}
                 isActive={pathname === category.path}
+                bento
               />
             )
           })}
